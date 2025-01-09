@@ -1,8 +1,5 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
-  "files": {
-    "maxSize": 2000000
-  },
   "formatter": {
     "enabled": true,
     "formatWithErrors": true,
@@ -60,10 +57,7 @@
   },
   "overrides": [
     {
-      "include": [
-        "**/*.ts",
-        "**/*.tsx"
-      ],
+      "include": ["**/*.ts", "**/*.tsx"],
       "linter": {
         "rules": {
           "complexity": {
@@ -78,7 +72,8 @@
           "suspicious": {
             "noExplicitAny": "info",
             "noDuplicateClassMembers": "off",
-            "noEmptyBlockStatements": "off"
+            "noEmptyBlockStatements": "off",
+            "noArrayIndexKey": "info"
           },
           "a11y": {
             "noSvgWithoutTitle": "info"
@@ -87,9 +82,7 @@
       }
     },
     {
-      "include": [
-        "*.astro"
-      ],
+      "include": ["*.astro"],
       "linter": {
         "rules": {
           "style": {
