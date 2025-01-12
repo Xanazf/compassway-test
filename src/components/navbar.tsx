@@ -1,18 +1,11 @@
-import { Button } from "@nextui-org/button";
-import { Kbd } from "@nextui-org/kbd";
 import { Link } from "@nextui-org/link";
-import { Input } from "@nextui-org/input";
 import {
   Navbar as NextUINavbar,
   NavbarBrand,
   NavbarContent,
   NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { link as linkStyles } from "@nextui-org/theme";
-import clsx from "clsx";
+import { useState, useEffect } from "react";
 
 import { siteConfig } from "@src/config/site";
 import { ThemeSwitch } from "@components/theme-switch";
@@ -23,10 +16,16 @@ import {
   LogoutIcon,
 } from "@components/icons";
 import { Logo } from "@components/icons";
-import { useState } from "react";
+import { useLogin } from "@src/hooks/login-state";
 
 export const Navbar = () => {
   const [loginState, setLoginState] = useState<boolean>(false);
+
+  const loginUtil = useLogin();
+
+  useEffect(() => {
+    setLoginState(loginUtil.isLoggedIn);
+  }, [loginUtil.isLoggedIn]);
 
   return (
     <NextUINavbar
@@ -80,8 +79,9 @@ export const Navbar = () => {
             </Link>
           ) : (
             <Link
-              href="/emails"
+              href="/"
               className="text-danger-500 gap-1"
+              onClick={loginUtil.logout}
             >
               <LogoutIcon />
               Logout
@@ -116,8 +116,8 @@ export const Navbar = () => {
           </Link>
         ) : (
           <Link
-            href="/emails"
             className="text-danger-500 gap-1"
+            onClick={loginUtil.logout}
           >
             <LogoutIcon />
           </Link>

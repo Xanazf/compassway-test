@@ -4,8 +4,6 @@ import bodyParser from "body-parser";
 const port = 5000;
 const app = express();
 
-// http://68.183.74.14:4005/api/
-// basic auth
 const baseURL = "http://68.183.74.14:4005/api";
 
 async function sendRegister(
@@ -31,8 +29,13 @@ async function sendRegister(
 }
 
 async function getCurrentUser() {
-  const res = await fetch(`${baseURL}users/current`, {
+  const headers = new Headers({
+    Authorization: "Basic",
+    Accept: "application/json",
+  });
+  const res = await fetch(`${baseURL}/users/current`, {
     method: "GET",
+    headers: headers,
   });
   return res.json();
 }
@@ -91,12 +94,14 @@ async function deleteEmail(id: number) {
 
 // API Routes
 app.get("/api", (_, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   res.send("Is someone there?.. Must have been the wind.");
 });
 
 app.use(bodyParser.json());
 app.post("/api/register", (req, res) => {
   const body = req.body;
+  res.header("Access-Control-Allow-Origin", "*");
   sendRegister(body.username, body.password, body.email).then(
     () => {
       res.status(201);
@@ -106,6 +111,7 @@ app.post("/api/register", (req, res) => {
 });
 
 app.get("/api/currentUser", (_, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
   getCurrentUser().then(
     success => {
       res.status(200);
@@ -122,6 +128,7 @@ app.get("/api/currentUser", (_, res) => {
 app.get("/api/emails/:limit/:offset", (req, res) => {
   const limit = req.params.limit;
   const offset = req.params.offset;
+  res.header("Access-Control-Allow-Origin", "*");
   if (
     !Number.isNaN(Number(limit)) &&
     !Number.isNaN(Number(offset))
@@ -145,6 +152,7 @@ app.get("/api/emails/:limit/:offset", (req, res) => {
 
 app.get("/api/email/:id", (req, res) => {
   const id = req.params.id;
+  res.header("Access-Control-Allow-Origin", "*");
   if (!Number.isNaN(Number(id))) {
     getEmail(Number(id)).then(
       success => {
@@ -169,6 +177,7 @@ app.post("/api/email", (req, res) => {
   const username = body.username;
   const password = body.password;
   const emailBody = body.emailBody;
+  res.header("Access-Control-Allow-Origin", "*");
   if (emailBody && username && password) {
     createEmail(emailBody, username, password).then(
       success => {
@@ -189,6 +198,7 @@ app.post("/api/email", (req, res) => {
 
 app.delete("/api/email/:id", (req, res) => {
   const emailID = req.params.id;
+  res.header("Access-Control-Allow-Origin", "*");
   if (!Number.isNaN(Number(emailID))) {
     deleteEmail(Number(emailID)).then(
       success => {
@@ -209,5 +219,5 @@ app.delete("/api/email/:id", (req, res) => {
 
 // API Start
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Backend listening on port ${port}`);
 });

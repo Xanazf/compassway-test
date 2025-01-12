@@ -17,9 +17,21 @@ export const useLogin = () => {
     return login ? storedPassword || null : null;
   });
 
+  const apiURL = "http://localhost:5000/api";
+
   const isLoggedIn = useMemo(() => {
     return login !== null;
   }, [login]);
+
+  const getCurrentUser = async () => {
+    const res = await fetch(`${apiURL}/currentUser`, {
+      method: "GET",
+    });
+    if (!isLoggedIn) {
+      return 401;
+    }
+    return res;
+  };
 
   const _setLogin = (
     login: string | null,
@@ -33,11 +45,27 @@ export const useLogin = () => {
     }
   };
 
-  const logout = (login: string) => {
+  const logout = () => {
     localStorage.removeItem(LoginProps.key);
     localStorage.removeItem(LoginProps.value);
     setLogin(null);
     setPassword(null);
+  };
+
+  const register = async (
+    email: string,
+    username: string,
+    password: string
+  ) => {
+    const res = await fetch(`${apiURL}/register`, {
+      method: "POST",
+      body: JSON.stringify({
+        email: email,
+        username: username,
+        password: password,
+      }),
+    });
+    return res.status;
   };
 
   useEffect(() => {
@@ -48,6 +76,8 @@ export const useLogin = () => {
     login,
     isLoggedIn,
     _setLogin,
+    getCurrentUser,
     logout,
+    register,
   };
 };

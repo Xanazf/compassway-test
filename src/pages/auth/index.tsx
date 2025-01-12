@@ -31,7 +31,13 @@ export default function AuthPage() {
     password: string,
     email: string
   ) {
-    loginUtil._setLogin(username, password);
+    loginUtil.register(email, username, password).then(status => {
+      if (status === 201) {
+        submitLogin(username, password);
+      } else {
+        console.log("register failed");
+      }
+    });
   }
 
   useEffect(() => {
